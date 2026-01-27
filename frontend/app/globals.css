@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+:root {
+  /* Primary - Coffee Brown */
+  --primary: #6F4E37;
+  --primary-dark: #4A3728;
+  --primary-light: #8B6914;
+
+  /* Secondary - Cream */
+  --secondary: #FDF8F3;
+  --secondary-dark: #F5E6D3;
+
+  /* Accent - Gold */
+  --accent: #C9A86C;
+  --accent-dark: #B8955A;
+
+  /* Background & Text - Light Mode */
+  --background: #FFFCF9;
+  --foreground: #2D2A26;
+  --card-bg: #FFFFFF;
+  --border: #E8E0D8;
+  --muted: #9F9589;
+}
+
+.dark {
+  /* Dark Mode Colors */
+  --primary: #C9A86C;
+  --primary-dark: #B8955A;
+  --primary-light: #D4B87A;
+
+  --secondary: #1F1B17;
+  --secondary-dark: #151210;
+
+  --background: #0F0D0B;
+  --foreground: #F5F0EB;
+  --card-bg: #1A1714;
+  --border: #2D2824;
+  --muted: #8C8579;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-light: var(--primary-light);
+  --color-secondary: var(--secondary);
+  --color-secondary-dark: var(--secondary-dark);
+  --color-accent: var(--accent);
+  --color-accent-dark: var(--accent-dark);
+  --color-card-bg: var(--card-bg);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --font-display: var(--font-playfair);
+  --font-body: var(--font-dm-sans);
+}
+
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display), serif;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+
+/* Button hover effects */
+.btn-primary {
+  @apply bg-[var(--primary)] text-white px-6 py-3 rounded-lg font-medium hover:bg-[var(--primary-dark)] transition-all duration-300 hover:shadow-lg hover:scale-105;
+}
+
+.btn-secondary {
+  @apply border-2 border-[var(--primary)] text-[var(--primary)] px-6 py-3 rounded-lg font-medium hover:bg-[var(--primary)] hover:text-white transition-all duration-300;
+}
+
+/* Card styles */
+.card {
+  @apply bg-[var(--card-bg)] rounded-2xl shadow-lg border border-[var(--border)] hover:shadow-xl transition-all duration-300;
+}
+
+/* Glass effect */
+.glass {
+  @apply backdrop-blur-md bg-white/80 dark:bg-black/60;
+}
+
+/* Gradient text */
+.gradient-text {
+  @apply bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] bg-clip-text text-transparent;
+}
+
+/* Animation classes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.6s ease-out forwards;
+}
+
+/* Stagger children animation */
+.stagger-children>* {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.stagger-children>*:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.stagger-children>*:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.stagger-children>*:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.stagger-children>*:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.stagger-children>*:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+.stagger-children>*:nth-child(6) {
+  animation-delay: 0.6s;
+}
