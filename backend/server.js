@@ -16,7 +16,7 @@ const corsOptions = {
     origin: [
         'http://localhost:3000',
         'http://127.0.0.1:3000',
-        process.env.FRONTEND_URL || 'https://chopchop-app.vercel.app'
+        process.env.FRONTEND_URL || 'https://chopchop-frontend.vercel.app'
     ].filter(Boolean),
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
