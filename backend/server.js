@@ -24,7 +24,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('/(.*)', cors(corsOptions)); // Handle preflight requests (Express 5 compatible)
+// app.options('/(.*)', cors(corsOptions)); // Removed to prevent Express 5 crash
 app.use(express.json());
 
 // Routes
