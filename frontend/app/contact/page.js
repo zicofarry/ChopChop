@@ -21,10 +21,10 @@ export default function ContactPage() {
     };
 
     const contactInfo = [
-        { icon: '📍', label: 'Address', value: 'Jl. Kopi Nikmat No. 123, Jakarta 12345' },
-        { icon: '📞', label: 'Phone', value: '+62 812 3456 7890' },
-        { icon: '✉️', label: 'Email', value: 'hello@chopchop.coffee' },
-        { icon: '🕐', label: 'Hours', value: 'Daily 08:00 - 22:00' },
+        { icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z', label: 'Address', value: 'Jl. Kopi Nikmat No. 123, Jakarta 12345' },
+        { icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z', label: 'Phone', value: '+62 812 3456 7890' },
+        { icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', label: 'Email', value: 'hello@chopchop.coffee' },
+        { icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', label: 'Hours', value: 'Daily 08:00 - 22:00' },
     ];
 
     return (
@@ -55,7 +55,7 @@ export default function ContactPage() {
 
                             {submitted && (
                                 <div className="mb-6 p-4 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-lg">
-                                    ✅ Thank you! Your message has been sent successfully.
+                                    Thank you! Your message has been sent successfully.
                                 </div>
                             )}
 
@@ -123,7 +123,7 @@ export default function ContactPage() {
                                 <div className="space-y-4">
                                     {contactInfo.map((info, index) => (
                                         <div key={index} className="flex items-start space-x-4 p-4 rounded-xl bg-[var(--secondary)]">
-                                            <span className="text-2xl">{info.icon}</span>
+                                            <svg className="w-6 h-6 text-[var(--primary)] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={info.icon} /></svg>
                                             <div>
                                                 <div className="font-medium">{info.label}</div>
                                                 <div className="text-[var(--muted)]">{info.value}</div>
@@ -136,7 +136,7 @@ export default function ContactPage() {
                             {/* Map Placeholder */}
                             <div className="rounded-2xl overflow-hidden h-80 bg-gradient-to-br from-[var(--primary)]/10 to-[var(--accent)]/10 flex items-center justify-center">
                                 <div className="text-center">
-                                    <span className="text-6xl block mb-4">📍</span>
+                                    <svg className="w-16 h-16 mx-auto mb-4 text-[var(--muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                                     <p className="text-[var(--muted)]">Interactive map coming soon</p>
                                 </div>
                             </div>

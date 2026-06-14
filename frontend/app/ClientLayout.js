@@ -5,8 +5,6 @@ import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import CartDrawer from '@/components/cart/CartDrawer';
-
 export default function ClientLayout({ children }) {
     return (
         <ThemeProvider>
@@ -18,7 +16,6 @@ export default function ClientLayout({ children }) {
                             {children}
                         </main>
                         <Footer />
-                        <CartDrawer />
                     </div>
                 </CartProvider>
             </AuthProvider>

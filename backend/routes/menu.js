@@ -7,13 +7,15 @@ const {
     getMenuByCategory,
     createMenu,
     updateMenu,
-    deleteMenu
+    deleteMenu,
+    getAllMenuAdmin
 } = require('../controllers/menuController');
 const { protect } = require('../middleware/auth');
 const { admin } = require('../middleware/admin');
 
 router.get('/', getAllMenu);
 router.get('/featured', getFeaturedMenu);
+router.get('/admin', protect, admin, getAllMenuAdmin);
 router.get('/:id', getMenuById);
 router.get('/category/:categoryId', getMenuByCategory);
 router.post('/', protect, admin, createMenu);

@@ -21,8 +21,19 @@ const orderItemSchema = new mongoose.Schema({
 const orderSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'User'
+    },
+    cafe: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cafe',
         required: true
+    },
+    tableNumber: {
+        type: Number
+    },
+    customerName: {
+        type: String,
+        trim: true
     },
     items: [orderItemSchema],
     totalPrice: {
@@ -36,8 +47,13 @@ const orderSchema = new mongoose.Schema({
     },
     paymentMethod: {
         type: String,
-        enum: ['cash', 'transfer', 'qris'],
+        enum: ['cash', 'qris'],
         default: 'cash'
+    },
+    paymentStatus: {
+        type: String,
+        enum: ['pending', 'paid'],
+        default: 'pending'
     },
     notes: {
         type: String,

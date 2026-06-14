@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+import { getCafeOrders, updateOrderStatus, verifyPayment } from '@/lib/api';
 
 export default function AdminOrdersPage() {
     const router = useRouter();
@@ -24,10 +23,7 @@ export default function AdminOrdersPage() {
 
     const fetchOrders = async () => {
         try {
-            const res = await fetch(`${API_URL}/orders`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            const data = await res.json();
+            const data = await getCafeOrders(token);
             if (Array.isArray(data)) setOrders(data);
         } catch (error) {
             console.error('Failed to fetch orders:', error);
@@ -36,19 +32,21 @@ export default function AdminOrdersPage() {
         }
     };
 
-    const updateStatus = async (id, status) => {
+    const handleUpdateStatus = async (id, status) => {
         try {
-            await fetch(`${API_URL}/orders/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ status })
-            });
+            await updateOrderStatus(id, status, token);
             fetchOrders();
         } catch (error) {
             console.error('Failed to update status:', error);
+        }
+    };
+
+    const handleVerifyPayment = async (id) => {
+        try {
+            await verifyPayment(id, token);
+            fetchOrders();
+        } catch (error) {
+            console.error('Failed to verify payment:', error);
         }
     };
 
@@ -98,7 +96,6 @@ export default function AdminOrdersPage() {
 
     return (
         <div className="min-h-screen bg-[var(--background)]">
-            {/* Header */}
             <section className="py-8 bg-gradient-to-br from-[var(--secondary)] to-[var(--background)]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <Link href="/admin" className="text-[var(--primary)] text-sm hover:underline mb-2 block">
@@ -108,7 +105,6 @@ export default function AdminOrdersPage() {
                 </div>
             </section>
 
-            {/* Filter */}
             <section className="py-4 border-b border-[var(--border)]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-wrap gap-2">
@@ -133,7 +129,6 @@ export default function AdminOrdersPage() {
                 </div>
             </section>
 
-            {/* Orders List */}
             <section className="py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {loading ? (
@@ -158,17 +153,31 @@ export default function AdminOrdersPage() {
                                                 <span className="text-[var(--muted)] text-sm">
                                                     {formatDate(order.createdAt)}
                                                 </span>
+                                                {order.tableNumber && (
+                                                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400">
+                                                        Meja {order.tableNumber}
+                                                    </span>
+                                                )}
+                                                <span className={`px-3 py-1 rounded-full text-sm font-medium ${order.paymentStatus === 'paid'
+                                                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                                    : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
+                                                    }`}>
+                                                    {order.paymentStatus === 'paid' ? 'Paid' : 'Pending'}
+                                                </span>
                                             </div>
-                                            <p className="font-medium">{order.user?.name || 'Unknown'}</p>
-                                            <p className="text-sm text-[var(--muted)]">{order.user?.email}</p>
+                                            <p className="font-medium">
+                                                {order.customerName || order.user?.name || 'Guest'}
+                                            </p>
+                                            {order.customerName && (
+                                                <p className="text-sm text-[var(--muted)]">Guest</p>
+                                            )}
                                         </div>
                                         <div className="text-right">
                                             <p className="text-2xl font-bold">{formatPrice(order.totalPrice)}</p>
-                                            <p className="text-sm text-[var(--muted)]">{order.paymentMethod || 'Cash'}</p>
+                                            <p className="text-sm text-[var(--muted)] capitalize">{order.paymentMethod}</p>
                                         </div>
                                     </div>
 
-                                    {/* Items */}
                                     <div className="border-t border-[var(--border)] pt-4 mb-4">
                                         <p className="text-sm font-medium mb-2">Items:</p>
                                         <div className="flex flex-wrap gap-2">
@@ -183,13 +192,20 @@ export default function AdminOrdersPage() {
                                         )}
                                     </div>
 
-                                    {/* Actions */}
                                     <div className="flex flex-wrap gap-2">
+                                        {order.paymentStatus !== 'paid' && (
+                                            <button
+                                                onClick={() => handleVerifyPayment(order._id)}
+                                                className="px-4 py-2 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600"
+                                            >
+                                                Verifikasi Pembayaran
+                                            </button>
+                                        )}
                                         {order.status !== 'completed' && order.status !== 'cancelled' && (
                                             <>
                                                 {order.status === 'pending' && (
                                                     <button
-                                                        onClick={() => updateStatus(order._id, 'confirmed')}
+                                                        onClick={() => handleUpdateStatus(order._id, 'confirmed')}
                                                         className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600"
                                                     >
                                                         Confirm
@@ -197,7 +213,7 @@ export default function AdminOrdersPage() {
                                                 )}
                                                 {order.status === 'confirmed' && (
                                                     <button
-                                                        onClick={() => updateStatus(order._id, 'preparing')}
+                                                        onClick={() => handleUpdateStatus(order._id, 'preparing')}
                                                         className="px-4 py-2 bg-orange-500 text-white rounded-lg text-sm hover:bg-orange-600"
                                                     >
                                                         Start Preparing
@@ -205,7 +221,7 @@ export default function AdminOrdersPage() {
                                                 )}
                                                 {order.status === 'preparing' && (
                                                     <button
-                                                        onClick={() => updateStatus(order._id, 'ready')}
+                                                        onClick={() => handleUpdateStatus(order._id, 'ready')}
                                                         className="px-4 py-2 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600"
                                                     >
                                                         Mark Ready
@@ -213,14 +229,14 @@ export default function AdminOrdersPage() {
                                                 )}
                                                 {order.status === 'ready' && (
                                                     <button
-                                                        onClick={() => updateStatus(order._id, 'completed')}
+                                                        onClick={() => handleUpdateStatus(order._id, 'completed')}
                                                         className="px-4 py-2 bg-gray-500 text-white rounded-lg text-sm hover:bg-gray-600"
                                                     >
                                                         Complete
                                                     </button>
                                                 )}
                                                 <button
-                                                    onClick={() => updateStatus(order._id, 'cancelled')}
+                                                    onClick={() => handleUpdateStatus(order._id, 'cancelled')}
                                                     className="px-4 py-2 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600"
                                                 >
                                                     Cancel
@@ -233,7 +249,7 @@ export default function AdminOrdersPage() {
                         </div>
                     ) : (
                         <div className="card p-12 text-center">
-                            <span className="text-6xl block mb-4">📦</span>
+                            <svg className="w-16 h-16 mx-auto mb-4 text-[var(--muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
                             <h3 className="text-xl font-semibold mb-2">No orders found</h3>
                             <p className="text-[var(--muted)]">
                                 {filter !== 'all' ? `No ${filter} orders` : 'Orders will appear here'}

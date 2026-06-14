@@ -1,10 +1,14 @@
 const mongoose = require('mongoose');
 
 const categorySchema = new mongoose.Schema({
+    cafe: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cafe',
+        required: true
+    },
     name: {
         type: String,
         required: [true, 'Category name is required'],
-        unique: true,
         trim: true
     },
     description: {
@@ -13,10 +17,12 @@ const categorySchema = new mongoose.Schema({
     },
     icon: {
         type: String,
-        default: '☕'
+        default: ''
     }
 }, {
     timestamps: true
 });
+
+categorySchema.index({ cafe: 1, name: 1 }, { unique: true });
 
 module.exports = mongoose.model('Category', categorySchema);

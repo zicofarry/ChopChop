@@ -6,6 +6,11 @@ const testimonialSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
+    cafe: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cafe',
+        required: true
+    },
     content: {
         type: String,
         required: [true, 'Testimonial content is required'],

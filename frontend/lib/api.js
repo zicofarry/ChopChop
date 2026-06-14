@@ -1,6 +1,5 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
-// Auth
 export const login = async (email, password) => {
     const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
@@ -26,16 +25,14 @@ export const getMe = async (token) => {
     return res.json();
 };
 
-// Menu
-export const getAllMenu = async () => {
+export const getAllMenu = async (cafe) => {
     try {
-        const url = `${API_URL}/menu`;
-        console.log('Fetching menu from:', url);
+        const params = cafe ? `?cafe=${cafe}` : '';
+        const url = `${API_URL}/menu${params}`;
         const res = await fetch(url);
-        if (!res.ok) throw new Error(`Failed to fetch menu: ${res.status} ${res.statusText}`);
+        if (!res.ok) throw new Error(`Failed to fetch menu: ${res.status}`);
         return res.json();
     } catch (error) {
-        console.error('Error in getAllMenu:', error);
         throw error;
     }
 };
@@ -50,13 +47,31 @@ export const getMenuByCategory = async (categoryId) => {
     return res.json();
 };
 
-// Categories
-export const getAllCategories = async () => {
-    const res = await fetch(`${API_URL}/categories`);
+export const getAllCategories = async (cafe) => {
+    const params = cafe ? `?cafe=${cafe}` : '';
+    const res = await fetch(`${API_URL}/categories${params}`);
     return res.json();
 };
 
-// Orders
+export const getTableByToken = async (token) => {
+    const res = await fetch(`${API_URL}/tables/token/${token}`);
+    return res.json();
+};
+
+export const createGuestOrder = async (orderData) => {
+    const res = await fetch(`${API_URL}/orders/guest`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData),
+    });
+    return res.json();
+};
+
+export const getOrderStatus = async (orderId) => {
+    const res = await fetch(`${API_URL}/orders/status/${orderId}`);
+    return res.json();
+};
+
 export const createOrder = async (orderData, token) => {
     const res = await fetch(`${API_URL}/orders`, {
         method: 'POST',
@@ -76,27 +91,33 @@ export const getMyOrders = async (token) => {
     return res.json();
 };
 
-// Reservations
-export const createReservation = async (reservationData, token) => {
-    const res = await fetch(`${API_URL}/reservations`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(reservationData),
-    });
-    return res.json();
-};
-
-export const getMyReservations = async (token) => {
-    const res = await fetch(`${API_URL}/reservations/my`, {
+export const getCafeOrders = async (token) => {
+    const res = await fetch(`${API_URL}/orders`, {
         headers: { Authorization: `Bearer ${token}` },
     });
     return res.json();
 };
 
-// Testimonials
+export const updateOrderStatus = async (orderId, status, token) => {
+    const res = await fetch(`${API_URL}/orders/${orderId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status }),
+    });
+    return res.json();
+};
+
+export const verifyPayment = async (orderId, token) => {
+    const res = await fetch(`${API_URL}/orders/${orderId}/verify-payment`, {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.json();
+};
+
 export const getTestimonials = async () => {
     const res = await fetch(`${API_URL}/testimonials`);
     return res.json();
@@ -114,9 +135,47 @@ export const createTestimonial = async (testimonialData, token) => {
     return res.json();
 };
 
-// Stats (Admin)
 export const getStats = async (token) => {
     const res = await fetch(`${API_URL}/stats`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.json();
+};
+
+export const getCafeTables = async (token) => {
+    const res = await fetch(`${API_URL}/tables`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.json();
+};
+
+export const createTable = async (tableData, token) => {
+    const res = await fetch(`${API_URL}/tables`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(tableData),
+    });
+    return res.json();
+};
+
+export const deleteTable = async (tableId, token) => {
+    const res = await fetch(`${API_URL}/tables/${tableId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.json();
+};
+
+export const getPublicTables = async (slug = 'chopchop') => {
+    const res = await fetch(`${API_URL}/tables/cafe/${slug}`);
+    return res.json();
+};
+
+export const getAllMenuAdmin = async (token) => {
+    const res = await fetch(`${API_URL}/menu/admin`, {
         headers: { Authorization: `Bearer ${token}` },
     });
     return res.json();

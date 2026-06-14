@@ -1,7 +1,5 @@
 const Testimonial = require('../models/Testimonial');
 
-// @desc    Get approved testimonials
-// @route   GET /api/testimonials
 const getApprovedTestimonials = async (req, res) => {
     try {
         const testimonials = await Testimonial.find({ approved: true })
@@ -13,14 +11,13 @@ const getApprovedTestimonials = async (req, res) => {
     }
 };
 
-// @desc    Create testimonial
-// @route   POST /api/testimonials
 const createTestimonial = async (req, res) => {
     try {
         const { content, rating } = req.body;
 
         const testimonial = await Testimonial.create({
             user: req.user._id,
+            cafe: req.user.cafe,
             content,
             rating
         });
@@ -31,11 +28,9 @@ const createTestimonial = async (req, res) => {
     }
 };
 
-// @desc    Get all testimonials (Admin)
-// @route   GET /api/testimonials/all
 const getAllTestimonials = async (req, res) => {
     try {
-        const testimonials = await Testimonial.find()
+        const testimonials = await Testimonial.find({ cafe: req.user.cafe })
             .populate('user', 'name email')
             .sort({ createdAt: -1 });
         res.json(testimonials);
@@ -44,8 +39,6 @@ const getAllTestimonials = async (req, res) => {
     }
 };
 
-// @desc    Update testimonial (approve/reject)
-// @route   PUT /api/testimonials/:id
 const updateTestimonial = async (req, res) => {
     try {
         const { approved } = req.body;

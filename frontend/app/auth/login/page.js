@@ -26,7 +26,7 @@ export default function LoginPage() {
 
             if (response.token) {
                 login(response, response.token);
-                router.push(response.role === 'admin' ? '/admin' : '/dashboard');
+                router.push('/admin');
             } else {
                 setError(response.message || 'Invalid email or password');
             }
@@ -40,21 +40,19 @@ export default function LoginPage() {
     return (
         <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-[var(--background)]">
             <div className="max-w-md w-full">
-                {/* Logo */}
                 <div className="text-center mb-8">
                     <Link href="/" className="inline-flex items-center space-x-2">
-                        <span className="text-4xl">☕</span>
+                        <svg className="w-10 h-10 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 2a3 3 0 00-3 3v1h6V5a3 3 0 00-3-3zM7 8h10l-1 14H8L7 8z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 5h14v2H5z" /></svg>
                         <span className="text-3xl font-bold gradient-text">ChopChop</span>
                     </Link>
-                    <h1 className="text-2xl font-bold mt-6">Welcome Back</h1>
-                    <p className="text-[var(--muted)] mt-2">Sign in to continue to your account</p>
+                    <h1 className="text-2xl font-bold mt-6">Admin Login</h1>
+                    <p className="text-[var(--muted)] mt-2">Sign in to manage your cafe</p>
                 </div>
 
-                {/* Form */}
                 <div className="card p-8">
                     {error && (
                         <div className="mb-6 p-4 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-lg text-sm">
-                            ❌ {error}
+                            {error}
                         </div>
                     )}
 
@@ -68,7 +66,7 @@ export default function LoginPage() {
                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                 className="w-full px-4 py-3 rounded-lg border border-[var(--border)] bg-[var(--background)] 
                          focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all"
-                                placeholder="your@email.com"
+                                placeholder="admin@email.com"
                             />
                         </div>
 
@@ -93,21 +91,11 @@ export default function LoginPage() {
                             {loading ? 'Signing in...' : 'Sign In'}
                         </button>
                     </form>
-
-                    <div className="mt-6 text-center">
-                        <p className="text-[var(--muted)]">
-                            Don't have an account?{' '}
-                            <Link href="/auth/register" className="text-[var(--primary)] hover:underline font-medium">
-                                Sign up
-                            </Link>
-                        </p>
-                    </div>
                 </div>
 
-                {/* Demo credentials */}
                 <div className="mt-6 p-4 rounded-lg bg-[var(--secondary)] text-center">
                     <p className="text-sm text-[var(--muted)]">
-                        Demo: Create an account to get started!
+                        Demo: admin@chopchop.coffee / admin123
                     </p>
                 </div>
             </div>

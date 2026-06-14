@@ -21,22 +21,22 @@ export default function AboutPage() {
 
     const values = [
         {
-            icon: '🌱',
+            icon: 'M12 6v6m0 0v6m0-6h6m-6 0H6',
             title: 'Quality First',
             description: 'We source only the finest, ethically-sourced coffee beans from around the world.'
         },
         {
-            icon: '💚',
+            icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z',
             title: 'Sustainability',
             description: 'Committed to eco-friendly practices, from biodegradable cups to responsible sourcing.'
         },
         {
-            icon: '🤝',
+            icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z',
             title: 'Community',
             description: 'More than a coffee shop - we\'re a gathering place for connection and creativity.'
         },
         {
-            icon: '✨',
+            icon: 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z',
             title: 'Craftsmanship',
             description: 'Every cup is crafted with passion, precision, and attention to detail.'
         },
@@ -122,7 +122,7 @@ export default function AboutPage() {
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {values.map((value, index) => (
                             <div key={index} className="card p-8 text-center hover:-translate-y-2">
-                                <span className="text-5xl mb-4 block">{value.icon}</span>
+                                <svg className="w-12 h-12 mx-auto mb-4 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={value.icon} /></svg>
                                 <h3 className="text-xl font-semibold mb-2">{value.title}</h3>
                                 <p className="text-[var(--muted)] text-sm">{value.description}</p>
                             </div>

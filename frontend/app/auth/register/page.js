@@ -45,7 +45,7 @@ export default function RegisterPage() {
 
             if (response.token) {
                 login(response, response.token);
-                router.push('/dashboard');
+                router.push('/admin');
             } else {
                 setError(response.message || 'Registration failed');
             }
@@ -59,21 +59,19 @@ export default function RegisterPage() {
     return (
         <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-[var(--background)]">
             <div className="max-w-md w-full">
-                {/* Logo */}
                 <div className="text-center mb-8">
                     <Link href="/" className="inline-flex items-center space-x-2">
-                        <span className="text-4xl">☕</span>
+                        <svg className="w-10 h-10 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 2a3 3 0 00-3 3v1h6V5a3 3 0 00-3-3zM7 8h10l-1 14H8L7 8z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 5h14v2H5z" /></svg>
                         <span className="text-3xl font-bold gradient-text">ChopChop</span>
                     </Link>
-                    <h1 className="text-2xl font-bold mt-6">Create Account</h1>
-                    <p className="text-[var(--muted)] mt-2">Join us and enjoy exclusive benefits</p>
+                    <h1 className="text-2xl font-bold mt-6">Register Admin</h1>
+                    <p className="text-[var(--muted)] mt-2">Create an admin account to manage your cafe</p>
                 </div>
 
-                {/* Form */}
                 <div className="card p-8">
                     {error && (
                         <div className="mb-6 p-4 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-lg text-sm">
-                            ❌ {error}
+                            {error}
                         </div>
                     )}
 
@@ -100,7 +98,7 @@ export default function RegisterPage() {
                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                 className="w-full px-4 py-3 rounded-lg border border-[var(--border)] bg-[var(--background)] 
                          focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all"
-                                placeholder="your@email.com"
+                                placeholder="admin@email.com"
                             />
                         </div>
 
@@ -147,7 +145,7 @@ export default function RegisterPage() {
                             disabled={loading}
                             className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {loading ? 'Creating account...' : 'Create Account'}
+                            {loading ? 'Creating account...' : 'Register Admin'}
                         </button>
                     </form>
 
@@ -160,14 +158,6 @@ export default function RegisterPage() {
                         </p>
                     </div>
                 </div>
-
-                {/* Terms */}
-                <p className="mt-6 text-center text-sm text-[var(--muted)]">
-                    By creating an account, you agree to our{' '}
-                    <a href="#" className="text-[var(--primary)] hover:underline">Terms of Service</a>
-                    {' '}and{' '}
-                    <a href="#" className="text-[var(--primary)] hover:underline">Privacy Policy</a>
-                </p>
             </div>
         </div>
     );

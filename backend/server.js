@@ -4,15 +4,12 @@ const dotenv = require('dotenv');
 const path = require('path');
 const connectDB = require('./config/db');
 
-// Load env vars
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
-// Connect to database
 connectDB();
 
 const app = express();
 
-// Middleware
 const corsOptions = {
     origin: [
         'http://localhost:3000',
@@ -25,24 +22,20 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-// app.options('/(.*)', cors(corsOptions)); // Removed to prevent Express 5 crash
 app.use(express.json());
 
-// Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/menu', require('./routes/menu'));
 app.use('/api/categories', require('./routes/category'));
 app.use('/api/orders', require('./routes/order'));
-app.use('/api/reservations', require('./routes/reservation'));
+app.use('/api/tables', require('./routes/table'));
 app.use('/api/testimonials', require('./routes/testimonial'));
 app.use('/api/stats', require('./routes/stats'));
 
-// Health check
 app.get('/api/health', (req, res) => {
     res.json({ status: 'Server is running', timestamp: new Date() });
 });
 
-// Error handler
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ message: 'Something went wrong!' });
@@ -50,7 +43,6 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-// Only run server if called directly (local), not when imported (Vercel)
 if (require.main === module) {
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);

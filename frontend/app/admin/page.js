@@ -81,18 +81,18 @@ export default function AdminDashboard() {
             color: 'from-blue-500 to-cyan-600'
         },
         {
-            title: 'Reservations',
-            description: 'Manage table reservations',
-            icon: '/images/cappuccino.png',
-            href: '/admin/reservations',
-            color: 'from-green-500 to-emerald-600'
-        },
-        {
             title: 'Testimonials',
             description: 'Approve customer testimonials',
             icon: '/images/tiramisu.png',
             href: '/admin/testimonials',
             color: 'from-purple-500 to-pink-600'
+        },
+        {
+            title: 'Tables',
+            description: 'Manage tables and QR codes',
+            icon: '/images/espresso.png',
+            href: '/admin/tables',
+            color: 'from-red-500 to-rose-600'
         },
     ];
 
@@ -117,58 +117,30 @@ export default function AdminDashboard() {
             {/* Quick Stats */}
             <section className="py-8 -mt-6">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                        <div className="card p-6 bg-gradient-to-br from-amber-500/10 to-orange-500/10 border-amber-500/20">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-[var(--muted)] text-sm">Total Menu Items</p>
-                                    <p className="text-3xl font-bold">
-                                        {loading ? '...' : stats?.overview?.totalMenuItems || 0}
-                                    </p>
-                                </div>
-                                <div className="relative w-12 h-12 rounded-xl overflow-hidden">
-                                    <Image src="/images/croissant.png" alt="Menu" fill className="object-cover" />
-                                </div>
-                            </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                        <div className="card p-5 md:p-6">
+                            <p className="text-[var(--muted)] text-xs md:text-sm">Menu Items</p>
+                            <p className="text-2xl md:text-3xl font-bold mt-1">
+                                {loading ? '...' : stats?.overview?.totalMenuItems || 0}
+                            </p>
                         </div>
-                        <div className="card p-6 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border-blue-500/20">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-[var(--muted)] text-sm">Pending Orders</p>
-                                    <p className="text-3xl font-bold">
-                                        {loading ? '...' : stats?.pending?.orders || 0}
-                                    </p>
-                                </div>
-                                <div className="relative w-12 h-12 rounded-xl overflow-hidden">
-                                    <Image src="/images/cold_brew.png" alt="Orders" fill className="object-cover" />
-                                </div>
-                            </div>
+                        <div className="card p-5 md:p-6">
+                            <p className="text-[var(--muted)] text-xs md:text-sm">Pending Orders</p>
+                            <p className="text-2xl md:text-3xl font-bold mt-1">
+                                {loading ? '...' : stats?.pending?.orders || 0}
+                            </p>
                         </div>
-                        <div className="card p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-green-500/20">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-[var(--muted)] text-sm">Today's Reservations</p>
-                                    <p className="text-3xl font-bold">
-                                        {loading ? '...' : stats?.today?.reservations || 0}
-                                    </p>
-                                </div>
-                                <div className="relative w-12 h-12 rounded-xl overflow-hidden">
-                                    <Image src="/images/cappuccino.png" alt="Reservations" fill className="object-cover" />
-                                </div>
-                            </div>
+                        <div className="card p-5 md:p-6">
+                            <p className="text-[var(--muted)] text-xs md:text-sm">Today's Revenue</p>
+                            <p className="text-xl md:text-2xl font-bold mt-1 text-[var(--primary)]">
+                                {loading ? '...' : formatPrice(stats?.today?.revenue || 0)}
+                            </p>
                         </div>
-                        <div className="card p-6 bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-purple-500/20">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-[var(--muted)] text-sm">Today's Revenue</p>
-                                    <p className="text-2xl font-bold">
-                                        {loading ? '...' : formatPrice(stats?.today?.revenue || 0)}
-                                    </p>
-                                </div>
-                                <div className="relative w-12 h-12 rounded-xl overflow-hidden">
-                                    <Image src="/images/espresso.png" alt="Revenue" fill className="object-cover" />
-                                </div>
-                            </div>
+                        <div className="card p-5 md:p-6">
+                            <p className="text-[var(--muted)] text-xs md:text-sm">Tables</p>
+                            <p className="text-2xl md:text-3xl font-bold mt-1">
+                                {loading ? '...' : stats?.overview?.totalTables || 0}
+                            </p>
                         </div>
                     </div>
                 </div>

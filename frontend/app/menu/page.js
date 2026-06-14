@@ -32,25 +32,25 @@ export default function MenuPage() {
 
     // Placeholder data
     const placeholderCategories = [
-        { _id: '1', name: 'Coffee', icon: '☕' },
-        { _id: '2', name: 'Non-Coffee', icon: '🍵' },
-        { _id: '3', name: 'Pastry', icon: '🥐' },
-        { _id: '4', name: 'Dessert', icon: '🍰' },
+        { _id: '1', name: 'Coffee', icon: '' },
+        { _id: '2', name: 'Non-Coffee', icon: '' },
+        { _id: '3', name: 'Pastry', icon: '' },
+        { _id: '4', name: 'Dessert', icon: '' },
     ];
 
     const placeholderMenu = [
-        { _id: '1', name: 'Signature Latte', description: 'Our house special with caramel and vanilla notes', price: 42000, image: '/images/signature_latte.png', category: { _id: '1', name: 'Coffee', icon: '☕' } },
-        { _id: '2', name: 'Cold Brew', description: 'Smooth, bold coffee steeped for 20 hours', price: 38000, image: '/images/cold_brew.png', category: { _id: '1', name: 'Coffee', icon: '☕' } },
-        { _id: '3', name: 'Cappuccino', description: 'Perfect balance of espresso and steamed milk', price: 35000, image: '/images/cappuccino.png', category: { _id: '1', name: 'Coffee', icon: '☕' } },
-        { _id: '4', name: 'Espresso', description: 'Pure, intense coffee shot', price: 25000, image: '/images/espresso.png', category: { _id: '1', name: 'Coffee', icon: '☕' } },
-        { _id: '5', name: 'Affogato', description: 'Espresso over vanilla gelato', price: 48000, image: '/images/affogato.png', category: { _id: '1', name: 'Coffee', icon: '☕' } },
-        { _id: '6', name: 'Matcha Latte', description: 'Premium Japanese matcha with creamy milk', price: 45000, image: '/images/matcha_latte.png', category: { _id: '2', name: 'Non-Coffee', icon: '🍵' } },
-        { _id: '7', name: 'Chai Latte', description: 'Spiced tea with steamed milk', price: 40000, image: '/images/chai_latte.png', category: { _id: '2', name: 'Non-Coffee', icon: '🍵' } },
-        { _id: '8', name: 'Hot Chocolate', description: 'Rich Belgian chocolate', price: 38000, image: '/images/hot_chocolate.png', category: { _id: '2', name: 'Non-Coffee', icon: '🍵' } },
-        { _id: '9', name: 'Croissant', description: 'Buttery, flaky French-style pastry', price: 28000, image: '/images/croissant.png', category: { _id: '3', name: 'Pastry', icon: '🥐' } },
-        { _id: '10', name: 'Pain au Chocolat', description: 'Chocolate-filled croissant', price: 32000, image: '/images/pain_au_chocolat.png', category: { _id: '3', name: 'Pastry', icon: '🥐' } },
-        { _id: '11', name: 'Tiramisu', description: 'Classic Italian coffee-flavored dessert', price: 52000, image: '/images/tiramisu.png', category: { _id: '4', name: 'Dessert', icon: '🍰' } },
-        { _id: '12', name: 'Cheesecake', description: 'New York style creamy cheesecake', price: 48000, image: '/images/cheesecake.png', category: { _id: '4', name: 'Dessert', icon: '🍰' } },
+        { _id: '1', name: 'Signature Latte', description: 'Our house special with caramel and vanilla notes', price: 42000, image: '/images/signature_latte.png', category: { _id: '1', name: 'Coffee', icon: '' } },
+        { _id: '2', name: 'Cold Brew', description: 'Smooth, bold coffee steeped for 20 hours', price: 38000, image: '/images/cold_brew.png', category: { _id: '1', name: 'Coffee', icon: '' } },
+        { _id: '3', name: 'Cappuccino', description: 'Perfect balance of espresso and steamed milk', price: 35000, image: '/images/cappuccino.png', category: { _id: '1', name: 'Coffee', icon: '' } },
+        { _id: '4', name: 'Espresso', description: 'Pure, intense coffee shot', price: 25000, image: '/images/espresso.png', category: { _id: '1', name: 'Coffee', icon: '' } },
+        { _id: '5', name: 'Affogato', description: 'Espresso over vanilla gelato', price: 48000, image: '/images/affogato.png', category: { _id: '1', name: 'Coffee', icon: '' } },
+        { _id: '6', name: 'Matcha Latte', description: 'Premium Japanese matcha with creamy milk', price: 45000, image: '/images/matcha_latte.png', category: { _id: '2', name: 'Non-Coffee', icon: '' } },
+        { _id: '7', name: 'Chai Latte', description: 'Spiced tea with steamed milk', price: 40000, image: '/images/chai_latte.png', category: { _id: '2', name: 'Non-Coffee', icon: '' } },
+        { _id: '8', name: 'Hot Chocolate', description: 'Rich Belgian chocolate', price: 38000, image: '/images/hot_chocolate.png', category: { _id: '2', name: 'Non-Coffee', icon: '' } },
+        { _id: '9', name: 'Croissant', description: 'Buttery, flaky French-style pastry', price: 28000, image: '/images/croissant.png', category: { _id: '3', name: 'Pastry', icon: '' } },
+        { _id: '10', name: 'Pain au Chocolat', description: 'Chocolate-filled croissant', price: 32000, image: '/images/pain_au_chocolat.png', category: { _id: '3', name: 'Pastry', icon: '' } },
+        { _id: '11', name: 'Tiramisu', description: 'Classic Italian coffee-flavored dessert', price: 52000, image: '/images/tiramisu.png', category: { _id: '4', name: 'Dessert', icon: '' } },
+        { _id: '12', name: 'Cheesecake', description: 'New York style creamy cheesecake', price: 48000, image: '/images/cheesecake.png', category: { _id: '4', name: 'Dessert', icon: '' } },
     ];
 
     const displayCategories = categories.length > 0 ? categories : placeholderCategories;
@@ -100,7 +100,6 @@ export default function MenuPage() {
                                     : 'bg-[var(--secondary)] text-[var(--foreground)] hover:bg-[var(--primary)]/10'
                                     }`}
                             >
-                                <span>{category.icon}</span>
                                 <span>{category.name}</span>
                             </button>
                         ))}
@@ -131,8 +130,8 @@ export default function MenuPage() {
                                 </div>
                             ) : (
                                 <div className="text-center py-16">
-                                    <span className="text-6xl mb-4 block">🔍</span>
-                                    <h3 className="text-xl font-semibold text-[var(--foreground)]">No items found</h3>
+                            <svg className="w-16 h-16 mx-auto mb-4 text-[var(--muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                            <h3 className="text-xl font-semibold text-[var(--foreground)]">No items found</h3>
                                     <p className="text-[var(--muted)]">Try selecting a different category</p>
                                 </div>
                             )}

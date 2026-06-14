@@ -5,9 +5,13 @@ const path = require('path');
 
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
+const Cafe = require('./models/Cafe');
 const User = require('./models/User');
+const Table = require('./models/Table');
 const Category = require('./models/Category');
 const Menu = require('./models/Menu');
+const Order = require('./models/Order');
+const Testimonial = require('./models/Testimonial');
 
 const connectDB = async () => {
     try {
@@ -23,9 +27,23 @@ const seedData = async () => {
     try {
         await connectDB();
 
+        // Create Default Cafe
+        let cafe = await Cafe.findOne({ slug: 'chopchop' });
+        if (!cafe) {
+            cafe = await Cafe.create({
+                name: 'ChopChop Coffee',
+                slug: 'chopchop',
+                address: 'Jl. Coffee No. 1',
+                phone: '081234567890'
+            });
+            console.log('✅ Default cafe created: ChopChop Coffee');
+        } else {
+            console.log('ℹ️  Cafe already exists');
+        }
+
         // Create Admin User
-        const existingAdmin = await User.findOne({ email: 'admin@chopchop.coffee' });
-        if (!existingAdmin) {
+        let adminUser = await User.findOne({ email: 'admin@chopchop.coffee' });
+        if (!adminUser) {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash('admin123', salt);
 
@@ -34,7 +52,8 @@ const seedData = async () => {
                 email: 'admin@chopchop.coffee',
                 password: hashedPassword,
                 role: 'admin',
-                phone: '081234567890'
+                phone: '081234567890',
+                cafe: cafe._id
             });
             console.log('✅ Admin user created');
             console.log('   Email: admin@chopchop.coffee');
@@ -43,29 +62,39 @@ const seedData = async () => {
             console.log('ℹ️  Admin user already exists');
         }
 
+        // Create Tables (1-10)
+        for (let i = 1; i <= 10; i++) {
+            const existing = await Table.findOne({ cafe: cafe._id, tableNumber: i });
+            if (!existing) {
+                await Table.create({
+                    cafe: cafe._id,
+                    tableNumber: i
+                });
+                console.log(`✅ Table ${i} created`);
+            }
+        }
+
         // Create Categories
-        const categories = [
-            { name: 'Coffee', description: 'Hot and iced coffee drinks', icon: '☕' },
-            { name: 'Non-Coffee', description: 'Tea, chocolate, and other beverages', icon: '🍵' },
-            { name: 'Pastry', description: 'Fresh baked goods', icon: '🥐' },
-            { name: 'Dessert', description: 'Sweet treats', icon: '🍰' },
+        const categoryData = [
+            { name: 'Coffee', description: 'Hot and iced coffee drinks', icon: '' },
+            { name: 'Non-Coffee', description: 'Tea, chocolate, and other beverages', icon: '' },
+            { name: 'Pastry', description: 'Fresh baked goods', icon: '' },
+            { name: 'Dessert', description: 'Sweet treats', icon: '' },
         ];
 
-        for (const cat of categories) {
-            const existing = await Category.findOne({ name: cat.name });
+        for (const cat of categoryData) {
+            const existing = await Category.findOne({ cafe: cafe._id, name: cat.name });
             if (!existing) {
-                await Category.create(cat);
+                await Category.create({ ...cat, cafe: cafe._id });
                 console.log(`✅ Category created: ${cat.name}`);
             }
         }
 
-        // Get category IDs
-        const coffeeCategory = await Category.findOne({ name: 'Coffee' });
-        const nonCoffeeCategory = await Category.findOne({ name: 'Non-Coffee' });
-        const pastryCategory = await Category.findOne({ name: 'Pastry' });
-        const dessertCategory = await Category.findOne({ name: 'Dessert' });
+        const coffeeCategory = await Category.findOne({ cafe: cafe._id, name: 'Coffee' });
+        const nonCoffeeCategory = await Category.findOne({ cafe: cafe._id, name: 'Non-Coffee' });
+        const pastryCategory = await Category.findOne({ cafe: cafe._id, name: 'Pastry' });
+        const dessertCategory = await Category.findOne({ cafe: cafe._id, name: 'Dessert' });
 
-        // Create Menu Items
         const menuItems = [
             { name: 'Signature Latte', description: 'Our house special with caramel and vanilla notes', price: 42000, category: coffeeCategory._id, image: '/images/signature_latte.png', featured: true, available: true },
             { name: 'Cold Brew', description: 'Smooth, bold coffee steeped for 20 hours', price: 38000, category: coffeeCategory._id, image: '/images/cold_brew.png', featured: true, available: true },
@@ -82,17 +111,20 @@ const seedData = async () => {
         ];
 
         for (const item of menuItems) {
-            const existing = await Menu.findOne({ name: item.name });
+            const existing = await Menu.findOne({ cafe: cafe._id, name: item.name });
             if (!existing) {
-                await Menu.create(item);
+                await Menu.create({ ...item, cafe: cafe._id });
                 console.log(`✅ Menu item created: ${item.name}`);
             }
         }
 
         console.log('\n🎉 Seed completed successfully!');
-        console.log('\nYou can now login as admin:');
+        console.log('\nDefault cafe: ChopChop Coffee');
+        console.log('Admin login:');
         console.log('   Email: admin@chopchop.coffee');
         console.log('   Password: admin123');
+        console.log('\n10 tables created with QR tokens.');
+        console.log('Scan URLs: http://localhost:3000/order/<token>');
 
         process.exit(0);
     } catch (error) {

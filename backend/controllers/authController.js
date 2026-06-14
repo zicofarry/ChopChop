@@ -1,15 +1,11 @@
-const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const Cafe = require('../models/Cafe');
 
-// Generate JWT
 const generateToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: '30d'
-    });
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
-// @desc    Register new user
-// @route   POST /api/auth/register
 const register = async (req, res) => {
     try {
         const { name, email, password, phone } = req.body;
@@ -19,11 +15,18 @@ const register = async (req, res) => {
             return res.status(400).json({ message: 'User already exists' });
         }
 
+        const cafe = await Cafe.findOne({ slug: 'chopchop' });
+        if (!cafe) {
+            return res.status(400).json({ message: 'Default cafe not found. Run seed first.' });
+        }
+
         const user = await User.create({
             name,
             email,
             password,
-            phone
+            phone,
+            role: 'admin',
+            cafe: cafe._id
         });
 
         if (user) {
@@ -32,6 +35,7 @@ const register = async (req, res) => {
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                cafe: user.cafe,
                 token: generateToken(user._id)
             });
         }
@@ -40,20 +44,18 @@ const register = async (req, res) => {
     }
 };
 
-// @desc    Login user
-// @route   POST /api/auth/login
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const user = await User.findOne({ email });
-
+        const user = await User.findOne({ email }).populate('cafe', 'name slug');
         if (user && (await user.matchPassword(password))) {
             res.json({
                 _id: user._id,
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                cafe: user.cafe,
                 token: generateToken(user._id)
             });
         } else {
@@ -64,11 +66,11 @@ const login = async (req, res) => {
     }
 };
 
-// @desc    Get current user
-// @route   GET /api/auth/me
 const getMe = async (req, res) => {
     try {
-        const user = await User.findById(req.user._id).select('-password');
+        const user = await User.findById(req.user._id)
+            .select('-password')
+            .populate('cafe', 'name slug');
         res.json(user);
     } catch (error) {
         res.status(500).json({ message: error.message });

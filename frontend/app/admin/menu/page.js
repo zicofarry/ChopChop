@@ -40,9 +40,10 @@ export default function AdminMenuPage() {
 
     const fetchData = async () => {
         try {
+            const headers = { Authorization: `Bearer ${token}` };
             const [menuRes, catRes] = await Promise.all([
-                fetch(`${API_URL}/menu`),
-                fetch(`${API_URL}/categories`)
+                fetch(`${API_URL}/menu/admin`, { headers }),
+                fetch(`${API_URL}/categories`, { headers: { ...headers } })
             ]);
             const menuData = await menuRes.json();
             const catData = await catRes.json();
@@ -191,7 +192,7 @@ export default function AdminMenuPage() {
                                                                 />
                                                             ) : (
                                                                 <div className="w-full h-full flex items-center justify-center text-2xl">
-                                                                    {item.category?.icon || '☕'}
+                                                                    <svg className="w-6 h-6 text-[var(--muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 2a3 3 0 00-3 3v1h6V5a3 3 0 00-3-3zM7 8h10l-1 14H8L7 8z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 5h14v2H5z" /></svg>
                                                                 </div>
                                                             )}
                                                         </div>
@@ -241,7 +242,7 @@ export default function AdminMenuPage() {
                             </div>
                         ) : (
                             <div className="p-12 text-center">
-                                <span className="text-6xl block mb-4">📋</span>
+                                <svg className="w-16 h-16 mx-auto mb-4 text-[var(--muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
                                 <h3 className="text-xl font-semibold mb-2">No menu items yet</h3>
                                 <p className="text-[var(--muted)]">Add your first menu item to get started</p>
                             </div>

@@ -1,29 +1,31 @@
 const Menu = require('../models/Menu');
 
-// @desc    Get all menu items
-// @route   GET /api/menu
 const getAllMenu = async (req, res) => {
     try {
-        const menu = await Menu.find({ available: true }).populate('category', 'name icon');
+        const filter = { available: true };
+        if (req.query.cafe) {
+            filter.cafe = req.query.cafe;
+        }
+        const menu = await Menu.find(filter).populate('category', 'name icon');
         res.json(menu);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-// @desc    Get featured menu items
-// @route   GET /api/menu/featured
 const getFeaturedMenu = async (req, res) => {
     try {
-        const menu = await Menu.find({ featured: true, available: true }).populate('category', 'name icon');
+        const filter = { featured: true, available: true };
+        if (req.query.cafe) {
+            filter.cafe = req.query.cafe;
+        }
+        const menu = await Menu.find(filter).populate('category', 'name icon');
         res.json(menu);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-// @desc    Get single menu item
-// @route   GET /api/menu/:id
 const getMenuById = async (req, res) => {
     try {
         const menu = await Menu.findById(req.params.id).populate('category', 'name icon');
@@ -37,33 +39,28 @@ const getMenuById = async (req, res) => {
     }
 };
 
-// @desc    Get menu by category
-// @route   GET /api/menu/category/:categoryId
 const getMenuByCategory = async (req, res) => {
     try {
-        const menu = await Menu.find({
-            category: req.params.categoryId,
-            available: true
-        }).populate('category', 'name icon');
+        const filter = { category: req.params.categoryId, available: true };
+        if (req.query.cafe) {
+            filter.cafe = req.query.cafe;
+        }
+        const menu = await Menu.find(filter).populate('category', 'name icon');
         res.json(menu);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-// @desc    Create menu item (Admin)
-// @route   POST /api/menu
 const createMenu = async (req, res) => {
     try {
-        const menu = await Menu.create(req.body);
+        const menu = await Menu.create({ ...req.body, cafe: req.user.cafe });
         res.status(201).json(menu);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-// @desc    Update menu item (Admin)
-// @route   PUT /api/menu/:id
 const updateMenu = async (req, res) => {
     try {
         const menu = await Menu.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -77,8 +74,6 @@ const updateMenu = async (req, res) => {
     }
 };
 
-// @desc    Delete menu item (Admin)
-// @route   DELETE /api/menu/:id
 const deleteMenu = async (req, res) => {
     try {
         const menu = await Menu.findByIdAndDelete(req.params.id);
@@ -92,4 +87,14 @@ const deleteMenu = async (req, res) => {
     }
 };
 
-module.exports = { getAllMenu, getFeaturedMenu, getMenuById, getMenuByCategory, createMenu, updateMenu, deleteMenu };
+const getAllMenuAdmin = async (req, res) => {
+    try {
+        const menu = await Menu.find({ cafe: req.user.cafe })
+            .populate('category', 'name icon');
+        res.json(menu);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { getAllMenu, getFeaturedMenu, getMenuById, getMenuByCategory, createMenu, updateMenu, deleteMenu, getAllMenuAdmin };

@@ -5,7 +5,7 @@ import { useCart } from '@/context/CartContext';
 import { useState } from 'react';
 
 export default function MenuCard({ item }) {
-    const { addItem, openCart } = useCart();
+    const { addItem } = useCart();
     const [added, setAdded] = useState(false);
 
     const formatPrice = (price) => {
@@ -19,69 +19,58 @@ export default function MenuCard({ item }) {
     const handleAddToCart = () => {
         addItem(item);
         setAdded(true);
-
-        // Show feedback then open cart
-        setTimeout(() => {
-            setAdded(false);
-            openCart();
-        }, 500);
+        setTimeout(() => setAdded(false), 800);
     };
 
     return (
-        <div className="card group overflow-hidden hover:-translate-y-2">
-            {/* Image */}
-            <div className="relative h-52 overflow-hidden">
+        <div className="bg-card-bg rounded-xl border border-border overflow-hidden hover:shadow-md transition-shadow">
+            <div className="relative h-48 sm:h-52 overflow-hidden bg-secondary">
                 {item.image ? (
                     <Image
                         src={item.image}
                         alt={item.name}
                         fill
-                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                 ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary)]/20 to-[var(--accent)]/20 flex items-center justify-center">
-                        <span className="text-6xl">{item.category?.icon || '☕'}</span>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <svg className="w-12 h-12 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
                     </div>
                 )}
                 {item.featured && (
-                    <div className="absolute top-4 left-4 bg-[var(--accent)] text-white text-xs font-medium px-3 py-1 rounded-full z-10">
+                    <div className="absolute top-3 left-3 bg-accent text-white text-xs font-medium px-2.5 py-1 rounded-full">
                         Featured
                     </div>
                 )}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
             </div>
 
-            {/* Content */}
-            <div className="p-6">
-                {/* Category */}
-                <div className="flex items-center space-x-2 mb-2">
-                    <span className="text-sm">{item.category?.icon}</span>
-                    <span className="text-xs text-[var(--muted)] uppercase tracking-wider">
+            <div className="p-5">
+                <div className="mb-1">
+                    <span className="text-xs text-muted uppercase tracking-wider">
                         {item.category?.name || 'Menu'}
                     </span>
                 </div>
 
-                {/* Title */}
-                <h3 className="text-xl font-semibold text-[var(--foreground)] mb-2 group-hover:text-[var(--primary)] transition-colors">
+                <h3 className="font-semibold text-foreground mb-1">
                     {item.name}
                 </h3>
 
-                {/* Description */}
-                <p className="text-[var(--muted)] text-sm mb-4 line-clamp-2">
+                <p className="text-muted text-sm mb-4 line-clamp-2">
                     {item.description}
                 </p>
 
-                {/* Price and Action */}
                 <div className="flex items-center justify-between">
-                    <span className="text-lg font-bold text-[var(--primary)]">
+                    <span className="font-bold text-accent">
                         {formatPrice(item.price)}
                     </span>
                     <button
                         onClick={handleAddToCart}
-                        className={`p-2 rounded-full transition-all group/btn ${added
-                                ? 'bg-green-500 text-white scale-110'
-                                : 'bg-[var(--primary)]/10 hover:bg-[var(--primary)] hover:text-white'
+                        className={`p-2 rounded-full transition-all ${added
+                            ? 'bg-green-500 text-white scale-110'
+                            : 'bg-secondary text-muted hover:bg-primary hover:text-white'
                             }`}
                     >
                         {added ? (

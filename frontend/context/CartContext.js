@@ -6,24 +6,31 @@ const CartContext = createContext();
 
 export function CartProvider({ children }) {
     const [items, setItems] = useState([]);
-    const [isOpen, setIsOpen] = useState(false);
+    const [tableNumber, setTableNumber] = useState(null);
+    const [cafeId, setCafeId] = useState(null);
 
-    // Load cart from localStorage on mount
     useEffect(() => {
         const savedCart = localStorage.getItem('chopchop_cart');
         if (savedCart) {
             try {
-                setItems(JSON.parse(savedCart));
+                const parsed = JSON.parse(savedCart);
+                setItems(parsed.items || []);
+                setTableNumber(parsed.tableNumber || null);
+                setCafeId(parsed.cafeId || null);
             } catch (e) {
                 console.error('Failed to parse cart:', e);
             }
         }
     }, []);
 
-    // Save cart to localStorage whenever it changes
     useEffect(() => {
-        localStorage.setItem('chopchop_cart', JSON.stringify(items));
-    }, [items]);
+        localStorage.setItem('chopchop_cart', JSON.stringify({ items, tableNumber, cafeId }));
+    }, [items, tableNumber, cafeId]);
+
+    const setOrderContext = (table, cafe) => {
+        setTableNumber(table);
+        setCafeId(cafe);
+    };
 
     const addItem = (item) => {
         setItems((prevItems) => {
@@ -53,29 +60,26 @@ export function CartProvider({ children }) {
 
     const clearCart = () => {
         setItems([]);
+        setTableNumber(null);
+        setCafeId(null);
     };
 
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
     const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-    const openCart = () => setIsOpen(true);
-    const closeCart = () => setIsOpen(false);
-    const toggleCart = () => setIsOpen(!isOpen);
-
     return (
         <CartContext.Provider
             value={{
                 items,
-                isOpen,
+                tableNumber,
+                cafeId,
                 addItem,
                 removeItem,
                 updateQuantity,
                 clearCart,
                 totalItems,
                 totalPrice,
-                openCart,
-                closeCart,
-                toggleCart,
+                setOrderContext,
             }}
         >
             {children}
