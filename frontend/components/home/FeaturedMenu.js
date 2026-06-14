@@ -97,8 +97,14 @@ export default function FeaturedMenu() {
     const displayItems = menuItems.length > 0 ? menuItems : placeholderItems;
 
     return (
-        <section className="py-16 sm:py-20 bg-background">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="py-16 sm:py-20 bg-background relative overflow-hidden">
+            {/* Subtle animated background elements */}
+            <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-[10%] -left-[5%] w-[40%] h-[40%] rounded-full bg-secondary-dark/20 blur-[80px] animate-[pulse_12s_ease-in-out_infinite]" />
+                <div className="absolute -bottom-[10%] -right-[5%] w-[30%] h-[50%] rounded-full bg-accent/5 blur-[100px] animate-[pulse_10s_ease-in-out_infinite_alternate]" />
+            </div>
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div className="text-center mb-10 sm:mb-14">
                     <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3">
                         Featured Menu
@@ -131,10 +137,10 @@ export default function FeaturedMenu() {
                 <div className="text-center mt-10 sm:mt-12">
                     <Link
                         href="/menu"
-                        className="inline-flex items-center gap-2 text-sm font-medium text-muted hover:text-foreground transition-colors"
+                        className="inline-flex items-center gap-2 text-sm font-medium text-muted hover:text-foreground transition-all duration-300 hover:gap-3 group"
                     >
                         View Full Menu
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                     </Link>

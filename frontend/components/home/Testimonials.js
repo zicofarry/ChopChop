@@ -60,10 +60,15 @@ export default function Testimonials() {
     const displayTestimonials = testimonials.length > 0 ? testimonials : placeholderTestimonials;
 
     return (
-        <section className="py-16 sm:py-20 bg-secondary">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="py-16 sm:py-20 bg-secondary relative overflow-hidden">
+            {/* Subtle animated background elements */}
+            <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-0 right-0 w-[50%] h-[100%] rounded-full bg-accent/5 blur-[120px] animate-[pulse_15s_ease-in-out_infinite]" />
+            </div>
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div className="text-center mb-10 sm:mb-14">
-                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 transition-transform hover:scale-105 duration-300 inline-block">
                         What Our Customers Say
                     </h2>
                     <p className="text-muted text-sm sm:text-base max-w-xl mx-auto">
@@ -86,19 +91,19 @@ export default function Testimonials() {
                         {displayTestimonials.map((testimonial) => (
                             <div
                                 key={testimonial._id}
-                                className="bg-card-bg rounded-xl p-6 border border-border hover:shadow-md hover:-translate-y-1 transition-all duration-300"
+                                className="bg-card-bg rounded-xl p-6 border border-border hover:shadow-lg hover:border-accent/30 hover:-translate-y-1.5 transition-all duration-300 group"
                             >
                                 <StarRating rating={testimonial.rating} />
 
-                                <p className="text-muted text-sm leading-relaxed mt-4 mb-6">
+                                <p className="text-muted text-sm leading-relaxed mt-4 mb-6 transition-colors duration-300 group-hover:text-foreground/90">
                                     {testimonial.content}
                                 </p>
 
                                 <div className="text-sm">
-                                    <span className="font-medium text-foreground">
+                                    <span className="font-medium text-foreground transition-colors duration-300 group-hover:text-accent">
                                         {testimonial.user?.name || 'Happy Customer'}
                                     </span>
-                                    <span className="text-muted ml-2">— Verified</span>
+                                    <span className="text-muted ml-2 transition-opacity duration-300 group-hover:opacity-70">— Verified</span>
                                 </div>
                             </div>
                         ))}
