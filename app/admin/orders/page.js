@@ -146,23 +146,23 @@ export default function AdminOrdersPage() {
                                 <div key={order._id} className="card p-6">
                                     <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
                                         <div>
-                                            <div className="flex items-center gap-3 mb-2">
+                                            <div className="flex flex-wrap items-center gap-2 mb-2 w-full">
                                                 <span className={`px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm capitalize ${getStatusColor(order.status)}`}>
-                                                    {order.status}
+                                                    Order: {order.status}
                                                 </span>
-                                                <span className="text-[var(--muted)] text-sm">
-                                                    {formatDate(order.createdAt)}
+                                                <span className={`px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm ${order.paymentStatus === 'paid'
+                                                    ? 'bg-green-500'
+                                                    : 'bg-red-500'
+                                                    }`}>
+                                                    Payment: {order.paymentStatus === 'paid' ? 'Lunas' : 'Belum Bayar'}
                                                 </span>
                                                 {order.tableNumber && (
                                                     <span className="px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm bg-purple-500">
                                                         Meja {order.tableNumber}
                                                     </span>
                                                 )}
-                                                <span className={`px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm ${order.paymentStatus === 'paid'
-                                                    ? 'bg-green-500'
-                                                    : 'bg-yellow-500'
-                                                    }`}>
-                                                    {order.paymentStatus === 'paid' ? 'Paid' : 'Pending'}
+                                                <span className="text-[var(--muted)] text-sm ml-auto">
+                                                    {formatDate(order.createdAt)}
                                                 </span>
                                             </div>
                                             <p className="font-medium">

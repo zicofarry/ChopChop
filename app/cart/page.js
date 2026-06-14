@@ -83,7 +83,7 @@ export default function CartPage() {
                         <div className="w-48 h-48 mx-auto bg-white rounded-xl p-4 flex items-center justify-center">
                             <div className="relative w-full h-full">
                                 <Image
-                                    src="/images/qr-payment.png"
+                                    src="/images/qr_payment.png"
                                     alt="QRIS Payment"
                                     fill
                                     className="object-contain"
