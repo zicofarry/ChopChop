@@ -1,96 +1,36 @@
-# ☕ ChopChop Coffee
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-A modern, full-stack coffee shop application facilitating customers to browse menus, manage carts, and place orders, while providing administrators with a powerful dashboard for business management.
+## Getting Started
 
-> **Project Status**: Active Development 🚀
+First, run the development server:
 
-## ✨ Features
-
-### 🛍️ For Customers
-- **Interactive Menu**: Browse coffee, pastries, and more with beautiful categories.
-- **Shopping Cart**: Add items, adjust quantities, and checkout seamlessly (persisted).
-- **Reservations**: Book a table online easily.
-- **User Accounts**: Register and login to track orders.
-- **Responsive Design**: Works beautifully on mobile and desktop.
-
-### 🛡️ For Admins
-- **Dashboard Overview**: Real-time statistics (Revenue, Orders, Reservations).
-- **Menu Management**: Add, edit, delete menu items with image URL support.
-- **Order Management**: Track and update order status (Pending -> Completed).
-- **Content Moderation**: Manage testimonials and reservations.
-
-## 🛠️ Tech Stack
-
-### Frontend
-- **Framework**: Next.js 14+ (App Router)
-- **Styling**: Tailwind CSS, Custom CSS Variables (Theme System)
-- **State Management**: React Context API (Cart, Auth, Theme)
-- **Design**: Modern Aesthetic, Glassmorphism, Smooth Animations
-
-### Backend
-- **Framework**: Express.js
-- **Database**: MongoDB (Mongoose)
-- **Authentication**: JWT (JSON Web Tokens)
-- **API**: RESTful Architecture
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js (v18+)
-- MongoDB (Running locally or Atlas URI)
-
-### 1. Setup Backend
 ```bash
-cd backend
-npm install
-
-# Setup Environment Variables (create .env)
-# See Environment Variables section below
-
 npm run dev
-# Server runs on http://localhost:5000
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-### 2. Setup Frontend
-```bash
-cd frontend
-npm install
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-# Setup Environment Variables (create .env.local)
-# See Environment Variables section below
+You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
-npm run dev
-# App runs on http://localhost:3000
-```
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-### 3. Database Seeding (Recommended)
-To populate the database with categories, menu items, and an admin account:
-```bash
-cd backend
-node seed.js
-```
+## Learn More
 
-## 🔐 Environment Variables
+To learn more about Next.js, take a look at the following resources:
 
-**Backend (`backend/.env`)**
-```env
-PORT=5000
-MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_super_secret_key
-```
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-**Frontend (`frontend/.env.local`)**
-```env
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
-```
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## 🔑 Default Admin Account
-After seeding, you can login with:
-- **Email**: `admin@chopchop.coffee`
-- **Password**: `admin123`
+## Deploy on Vercel
 
-## 📦 Deployment
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions on deploying to Vercel and Render.
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
----
-Made with ☕ and Code.
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
