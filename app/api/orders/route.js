@@ -43,7 +43,8 @@ export async function POST(request) {
       const paymentResult = await createPayment(order, 'qris');
       if (paymentResult.success) {
         await Payment.create({
-          order: order._id, method: 'qris', status: 'pending', amount: totalPrice
+          order: order._id, method: 'qris', status: 'pending', amount: totalPrice,
+          externalId: paymentResult.data.externalId
         });
       }
       return NextResponse.json({ order, payment: paymentResult.data }, { status: 201 });

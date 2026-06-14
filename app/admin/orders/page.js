@@ -147,6 +147,9 @@ export default function AdminOrdersPage() {
                                     <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
                                         <div>
                                             <div className="flex flex-wrap items-center gap-2 mb-2 w-full">
+                                                <span className="text-[var(--muted)] text-sm font-medium mr-auto">
+                                                    {formatDate(order.createdAt)}
+                                                </span>
                                                 <span className={`px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm capitalize ${getStatusColor(order.status)}`}>
                                                     Order: {order.status}
                                                 </span>
@@ -161,9 +164,6 @@ export default function AdminOrdersPage() {
                                                         Meja {order.tableNumber}
                                                     </span>
                                                 )}
-                                                <span className="text-[var(--muted)] text-sm ml-auto">
-                                                    {formatDate(order.createdAt)}
-                                                </span>
                                             </div>
                                             <p className="font-medium">
                                                 {order.customerName || order.user?.name || 'Guest'}

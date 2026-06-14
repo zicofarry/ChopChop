@@ -5,8 +5,9 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
-import { createGuestOrder, createOrder } from '@/lib/api';
+import { useState, useEffect, useRef } from 'react';
+import { createGuestOrder, createOrder, getOrderStatus, simulatePayment } from '@/lib/api';
+import QRCode from 'qrcode';
 
 export default function CartPage() {
     const { items, removeItem, updateQuantity, totalPrice, clearCart, tableNumber, cafeId } = useCart();
@@ -15,6 +16,11 @@ export default function CartPage() {
     const [loading, setLoading] = useState(false);
     const [orderSuccess, setOrderSuccess] = useState(false);
     const [orderData, setOrderData] = useState(null);
+    const [paymentData, setPaymentData] = useState(null);
+    const [qrDataUrl, setQrDataUrl] = useState(null);
+    const [qrLoading, setQrLoading] = useState(true);
+    const [paymentStatus, setPaymentStatus] = useState('pending');
+    const pollingRef = useRef(null);
     const [paymentMethod, setPaymentMethod] = useState('cash');
     const [customerName, setCustomerName] = useState('');
     const [step, setStep] = useState('cart');
@@ -59,6 +65,7 @@ export default function CartPage() {
                 clearCart();
 
                 if (paymentMethod === 'qris' && result.payment) {
+                    setPaymentData(result.payment);
                     setStep('qris');
                 }
             } else {
@@ -72,35 +79,145 @@ export default function CartPage() {
         }
     };
 
+    useEffect(() => {
+        if (paymentData?.qrString) {
+            setQrLoading(true);
+            QRCode.toDataURL(paymentData.qrString, {
+                width: 400,
+                margin: 2,
+                color: { dark: '#000000', light: '#FFFFFF' }
+            }).then(url => {
+                setQrDataUrl(url);
+                setQrLoading(false);
+            }).catch(() => setQrLoading(false));
+        } else if (paymentData?.qrImageUrl) {
+            setQrLoading(false);
+        }
+    }, [paymentData]);
+
+    useEffect(() => {
+        if (step === 'qris' && orderData?._id) {
+            pollingRef.current = setInterval(async () => {
+                try {
+                    const order = await getOrderStatus(orderData._id);
+                    if (order.paymentStatus === 'paid') {
+                        setPaymentStatus('paid');
+                        clearInterval(pollingRef.current);
+                    }
+                } catch (e) {
+                    // ignore polling errors
+                }
+            }, 5000);
+        }
+        return () => {
+            if (pollingRef.current) clearInterval(pollingRef.current);
+        };
+    }, [step, orderData?._id]);
+
+    const handleSimulatePayment = async () => {
+        try {
+            const res = await simulatePayment(orderData._id);
+            if (res.success) {
+                setPaymentStatus('paid');
+            }
+        } catch (e) {
+            // ignore
+        }
+    };
+
     if (step === 'qris' && orderData) {
+        const isStatic = !!paymentData?.qrImageUrl;
+        const isDemo = paymentData?.xenditQrId?.startsWith('demo-');
+        const isPaid = paymentStatus === 'paid';
+
+        if (isPaid) {
+            return (
+                <div className="min-h-screen bg-[var(--background)]">
+                    <div className="max-w-lg mx-auto px-4 py-12">
+                        <div className="card p-8 text-center space-y-6">
+                            <svg className="w-20 h-20 mx-auto text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <h1 className="text-2xl font-bold text-green-600">Pembayaran Berhasil!</h1>
+                            <p className="text-[var(--muted)]">Pembayaran QRIS sebesar <span className="font-bold text-[var(--foreground)]">{formatPrice(orderData.totalPrice)}</span> telah diterima.</p>
+                            <p className="font-semibold">Meja {tableNumber || '-'} &bull; Order #{orderData._id?.slice(-6)}</p>
+                            <Link href="/" className="btn-primary w-full block text-center">Kembali ke Beranda</Link>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
         return (
             <div className="min-h-screen bg-[var(--background)]">
                 <div className="max-w-lg mx-auto px-4 py-12">
                     <div className="card p-8 text-center space-y-6">
                         <svg className="w-16 h-16 mx-auto text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" /></svg>
                         <h1 className="text-2xl font-bold">Bayar dengan QRIS</h1>
-                        <p className="text-[var(--muted)]">Scan QR code di bawah untuk membayar</p>
+                        <p className="text-[var(--muted)]">
+                            {isStatic
+                                ? 'Scan QRIS GoPay Merchant untuk membayar'
+                                : isDemo
+                                    ? 'QRIS dinamis dengan nominal otomatis'
+                                    : 'Scan QR code di bawah untuk membayar'}
+                        </p>
+
                         <div className="w-48 h-48 mx-auto bg-white rounded-xl p-4 flex items-center justify-center">
-                            <div className="relative w-full h-full">
-                                <Image
-                                    src="/images/qr_payment.png"
+                            {qrLoading ? (
+                                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[var(--primary)]"></div>
+                            ) : isStatic ? (
+                                <div className="relative w-full h-full">
+                                    <Image
+                                        src={paymentData.qrImageUrl}
+                                        alt="QRIS"
+                                        fill
+                                        className="object-contain"
+                                    />
+                                </div>
+                            ) : qrDataUrl ? (
+                                <img
+                                    src={qrDataUrl}
                                     alt="QRIS Payment"
-                                    fill
-                                    className="object-contain"
+                                    className="w-full h-full object-contain"
                                 />
-                            </div>
+                            ) : null}
                         </div>
+
                         <p className="text-3xl font-bold text-[var(--primary)]">
                             {formatPrice(orderData.totalPrice)}
                         </p>
+
+                        {isDemo ? (
+                            <button
+                                onClick={handleSimulatePayment}
+                                className="btn-primary w-full py-4 text-lg"
+                            >
+                                Simulasi Bayar QRIS
+                            </button>
+                        ) : (
+                            <div className="flex items-center justify-center gap-2 text-sm text-[var(--muted)]">
+                                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                Menunggu pembayaran...
+                            </div>
+                        )}
+
                         <div className="space-y-2">
                             <p className="text-sm text-[var(--muted)]">
-                                Atau bayar ke kasir dan tunjukkan nomor meja
+                                {isStatic
+                                    ? 'Scan QRIS di atas pakai GoPay/OVO/DANA/m-banking, lalu masukkan nominal sesuai total'
+                                    : isDemo
+                                        ? 'Demo — klik tombol di atas untuk simulasi pembayaran'
+                                        : 'Scan QR code untuk membayar otomatis'}
                             </p>
                             <p className="font-semibold">
                                 Meja {tableNumber || '-'} &bull; Order #{orderData._id?.slice(-6)}
                             </p>
                         </div>
+
+                        {isStatic && (
+                            <p className="text-xs text-[var(--muted)]">
+                                * Konfirmasi pembayaran dilakukan oleh admin setelah dana masuk
+                            </p>
+                        )}
+
                         <Link href="/" className="btn-primary w-full block text-center">
                             Selesai
                         </Link>
